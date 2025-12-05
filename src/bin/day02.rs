@@ -86,6 +86,10 @@ fn find_invalid_ids(range: RangeInclusive<u64>, part: Part) -> Vec<u64> {
     range.filter(|&number| is_invalid(number)).collect()
 }
 
+/// Day 2: Gift Shop
+///
+/// - Part One: ID is "invalid" if some digit sequence repeats twice (e.g. `6464` - `64`x2).
+/// - Part Two: ID is "invalid" if some digit sequence repeats at least twice (e.g. `123123123` = `123`x3)
 fn solve_day02(ranges: &[RangeInclusive<u64>], part: Part) -> u64 {
     ranges.iter().fold(0, |sum, range| {
         sum + find_invalid_ids(range.clone(), part).iter().sum::<u64>()

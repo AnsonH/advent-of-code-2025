@@ -1,6 +1,7 @@
 use std::fs;
 use thiserror::Error;
 
+use advent_of_code_2025::Part;
 use anyhow::Result;
 
 #[derive(Error, Debug, PartialEq)]
@@ -15,19 +16,15 @@ enum Direction {
     Right,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-enum Part {
-    /// Only counts number of times dial points to `0` at the end of each move.
-    One,
-    /// Counts number of times the dial hits `0` during a rotation or end of one.
-    Two,
-}
-
 const INITIAL_DIAL_POSITION: isize = 50;
 const DIAL_LENGTH: isize = 100;
 
+/// Day 1: Secret Entrance
+///
+/// - Part One: Only counts number of times dial points to `0` at the end of each move.
+/// - Part Two: Counts number of times the dial hits `0` during a rotation or end of one.
 fn solve_day01(input: &str, part: Part) -> Result<isize, SolverError> {
-    let rotations: Vec<&str> = input.split('\n').filter(|&line| !line.is_empty()).collect();
+    let rotations: Vec<&str> = input.lines().filter(|&line| !line.is_empty()).collect();
 
     let mut dial_position = INITIAL_DIAL_POSITION;
     let mut final_pos_zero_hit_count = 0;

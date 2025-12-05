@@ -1,14 +1,7 @@
 use std::fs;
 
+use advent_of_code_2025::Part;
 use anyhow::Result;
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-enum Part {
-    /// Picks 2 numbers from list of numbers.
-    One,
-    /// Picks 12 numbers from list of numbers.
-    Two,
-}
 
 #[inline]
 fn get_digit(row: &str, index: usize) -> &str {
@@ -69,8 +62,12 @@ fn largest_joltage(row: &str, target_num: usize) -> u64 {
         .unwrap_or_else(|_| panic!("failed to convert {result} to number"))
 }
 
+/// Day 3: Lobby
+///
+/// - Part One: Picks 2 numbers from list of numbers.
+/// - Part Two: Picks 12 numbers from list of numbers.
 fn solve_day03(input: &str, part: Part) -> u64 {
-    let rows: Vec<&str> = input.split('\n').collect();
+    let rows: Vec<&str> = input.lines().collect();
     let target_num = match part {
         Part::One => 2,
         Part::Two => 12,
