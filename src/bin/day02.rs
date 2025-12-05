@@ -1,5 +1,6 @@
 use std::{fs, ops::RangeInclusive};
 
+use advent_of_code_2025::parse::parse_u64_number_range;
 use anyhow::Result;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -14,15 +15,7 @@ enum Part {
 ///
 /// e.g. `parse_input("1-5,1000-1002")` -> `vec![1..=5, 1000..=1002])`
 fn parse_input(input: &str) -> Vec<RangeInclusive<u64>> {
-    input
-        .split(',')
-        .map(|range_str| {
-            let (start, end) = range_str
-                .split_once('-')
-                .expect("input range should be delimited by `-`");
-            start.parse().unwrap()..=end.parse().unwrap()
-        })
-        .collect()
+    input.split(',').map(parse_u64_number_range).collect()
 }
 
 /// Part One - Invalid if upper half of number equals to lower half (e.g. `6464`, `123123`).
