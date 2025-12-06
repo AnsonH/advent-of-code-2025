@@ -2,7 +2,7 @@ use anyhow::Result;
 use grid::*;
 
 /// Creates a 2D [Grid] from a string input, where each row is separated by new line. Each character
-/// is parsed by `parser` to convert it to type `T`.
+/// is parsed by `char_parser` to convert it to type `T`.
 ///
 /// # Example
 ///
@@ -14,7 +14,7 @@ use grid::*;
 /// let grid = parse_string_to_grid(input, |ch| Ok(ch.to_digit(10).unwrap()));
 /// assert_eq!(grid.unwrap(), grid![[0, 1, 2, 3][4, 5, 6, 7]]);
 /// ```
-pub fn parse_string_to_grid<T, F>(input: &str, parser: F) -> Result<Grid<T>>
+pub fn parse_string_to_grid<T, F>(input: &str, char_parser: F) -> Result<Grid<T>>
 where
     F: Fn(char) -> Result<T>,
 {
@@ -27,7 +27,7 @@ where
 
     let cells: Vec<T> = lines
         .iter()
-        .flat_map(|line| line.chars().map(&parser).collect::<Vec<Result<T>>>())
+        .flat_map(|line| line.chars().map(&char_parser).collect::<Vec<Result<T>>>())
         .collect::<Result<Vec<T>>>()?;
 
     Ok(Grid::from_vec(cells, width))
