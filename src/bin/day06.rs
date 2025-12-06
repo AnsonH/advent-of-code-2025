@@ -107,6 +107,60 @@ fn parse_input_for_part_2(input: &str) -> Vec<Operation> {
             acc
         });
 
+    let number_lines: Vec<&str> = lines_iter.collect();
+    operators_with_col_range
+        .iter()
+        .map(|(operator, col_range)| {
+            let operands: Vec<u64> = col_range
+                .clone()
+                .rev() // since we read columns right-to-left
+                .map(|col_idx| {
+                    // Read every column from top to bottom to get each operand
+                    number_lines
+                        .iter()
+                        .map(|line| line.get(col_idx..col_idx + 1).unwrap())
+                        .join("")
+                        .trim()
+                        .parse::<u64>()
+                        .expect("expected valid number")
+                })
+                .collect();
+            Operation::new(operands, *operator)
+        })
+        .rev() // read entire "number columns" right-to-left
+        .collect()
+}
+
+/// Old Solution - Using 2D grid transformations
+#[allow(dead_code)]
+#[deprecated]
+fn parse_input_for_part_2_alternative(input: &str) -> Vec<Operation> {
+    let mut lines_iter = input.lines();
+
+    // Pattern: The operator symbol is always the leftmost position of a "number column", we can use
+    // spacing between operators to deduce the index range of each "number column"
+    //
+    // Example:
+    //
+    // 123   8
+    //  45  76    -->   operators_with_col_range = [(Operator::Multiply, 0..3), (Operator::Add, 4..7)]
+    //   6 543
+    // *   +
+    let operators_line = lines_iter.next_back().expect("operators row is missing");
+    let operators_with_col_range: Vec<(Operator, Range<usize>)> = operators_line
+        .chars()
+        .enumerate()
+        .fold(vec![], |mut acc, (idx, ch)| {
+            if let Ok(operator) = Operator::from_str(&ch.to_string()) {
+                if let Some((old_op, old_range)) = acc.pop() {
+                    // The `- 1` in `idx - 1` is to ignore a single whitespace between 2 adjacent number columns
+                    acc.push((old_op, old_range.start..idx - 1));
+                }
+                acc.push((operator, idx..operators_line.len()));
+            }
+            acc
+        });
+
     // Construct a 2D grid of input numbers, example:
     //
     // 123   8                                     [["123", "  8"]
