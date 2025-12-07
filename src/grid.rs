@@ -33,8 +33,18 @@ where
     Ok(Grid::from_vec(cells, width))
 }
 
+/// Converts a grid to string.
+pub fn grid_to_string<T: ToString>(grid: &Grid<T>) -> String {
+    grid.iter_rows()
+        .map(|row| row.map(|cell| cell.to_string()).collect::<String>())
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 #[cfg(test)]
 mod tests {
+    use std::fmt::Display;
+
     use super::*;
     use pretty_assertions::assert_eq;
 
@@ -42,6 +52,15 @@ mod tests {
     enum Digit {
         Zero,
         One,
+    }
+
+    impl Display for Digit {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                Digit::Zero => write!(f, "0"),
+                Digit::One => write!(f, "1"),
+            }
+        }
     }
 
     fn char_to_digit(ch: char) -> Result<Digit> {
@@ -73,5 +92,14 @@ mod tests {
         let imbalanced_input = "0011\n1";
         let grid = parse_string_to_grid(imbalanced_input, char_to_digit);
         assert!(grid.is_err());
+    }
+
+    #[test]
+    fn test_grid_to_string() {
+        let grid = grid![
+            [Digit::Zero, Digit::Zero, Digit::One, Digit::One]
+            [Digit::Zero, Digit::One, Digit::Zero, Digit::One]
+        ];
+        assert_eq!(grid_to_string(&grid), String::from("0011\n0101"));
     }
 }
