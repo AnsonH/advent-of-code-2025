@@ -1,4 +1,6 @@
+pub mod coords;
 pub mod grid;
+pub mod line;
 pub mod parse;
 
 /// Part One/Two of the problem.
