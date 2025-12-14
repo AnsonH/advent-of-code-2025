@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 /// Represents a 2D coordinate.
-#[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
+#[derive(Clone, Default, PartialEq, Eq, Hash)]
 pub struct Coords2D {
     pub x: i64,
     pub y: i64,
@@ -17,6 +17,6 @@ impl Coords2D {
 
 impl Debug for Coords2D {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Coords2D({}, {})", self.x, self.y)
+        write!(f, "Coords2D({}, {})", self.x, self.y)
     }
 }
